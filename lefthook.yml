@@ -1,0 +1,12 @@
+pre-commit:
+  commands:
+    check:
+      glob: "src/**/*.ts"
+      exclude:
+        - "src/node_modules/**"
+        - "src/dist/**"
+        - "src/coverage/**"
+      run:
+        - pnxp biome format
+        - pnpx biome check
+      stage_fixed: true
