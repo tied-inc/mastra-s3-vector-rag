@@ -1,5 +1,6 @@
 import * as path from "node:path";
 import { CfnOutput, Duration, Stack, type StackProps } from "aws-cdk-lib";
+import { Platform } from "aws-cdk-lib/aws-ecr-assets";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { FunctionUrlAuthType } from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -52,11 +53,11 @@ export class MastraStack extends Stack {
           "**/.next/**",
           "**/.pnpm-store/**",
         ],
-        // If your image must run on x86_64 explicitly, uncomment the next line
-        // platform: Platform.LINUX_AMD64,
+        platform: Platform.LINUX_AMD64,
       }),
+      architecture: lambda.Architecture.X86_64,
       memorySize: 1024,
-      timeout: Duration.seconds(30),
+      timeout: Duration.seconds(900),
       environment: {
         // Provide S3 Vectors bucket ARN (runtime will derive name if needed)
         S3_VECTORS_BUCKET_ARN: vectorBucketArn,

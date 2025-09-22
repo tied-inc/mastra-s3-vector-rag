@@ -39,9 +39,18 @@ importers:
       '@biomejs/biome':
         specifier: ^2.2.4
         version: 2.2.4
+      '@mastra/client-js':
+        specifier: ^0.13.1
+        version: 0.13.1(encoding@0.1.13)(openapi-types@12.1.3)(react@19.1.1)(zod@3.25.76)
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
       '@types/node':
         specifier: ^24.5.2
         version: 24.5.2
+      jsonwebtoken:
+        specifier: ^9.0.2
+        version: 9.0.2
       lefthook:
         specifier: ^1.13.1
         version: 1.13.1
@@ -627,8 +636,21 @@ packages:
   '@jsdevtools/ono@7.1.3':
     resolution: {integrity: sha512-4JQNk+3mVzK3xh2rqd6RB4J46qUR19azEHBneZyTZM+c456qOrbbM/5xcR8huNCCcbVt7+UmizG6GuUvPvKUYg==}
 
+  '@lukeed/csprng@1.1.0':
+    resolution: {integrity: sha512-Z7C/xXCiGWsg0KuKsHTKJxbWhpI3Vs5GwLfOean7MGyVFGqdRgBbAjOCh6u4bbjPc/8MJ2pZmK/0DLdCbivLDA==}
+    engines: {node: '>=8'}
+
+  '@lukeed/uuid@2.0.1':
+    resolution: {integrity: sha512-qC72D4+CDdjGqJvkFMMEAtancHUQ7/d/tAiHf64z8MopFDmcrtbcJuerDtFceuAfQJ2pDSfCKCtbqoGBNnwg0w==}
+    engines: {node: '>=8'}
+
   '@mastra/auth@0.1.3':
     resolution: {integrity: sha512-fVK+ho+bBZ5kx/Xw95W4smLgIbbm/mDDh0hij2ikdW5Tag5p7pmXNHcHw/ZOUnTyheYCKoMXEzUikYYadJwQRw==}
+
+  '@mastra/client-js@0.13.1':
+    resolution: {integrity: sha512-7f0SIa9BnZIOD2Otr1q+p9GMQNlRZla1xxcU64ATt0h2eq11R2Ve0ajRoHs09pFhPuIH2WiR+c12LRf2DIXxZQ==}
+    peerDependencies:
+      zod: ^3.25.0 || ^4.0.0
 
   '@mastra/core@0.17.1':
     resolution: {integrity: sha512-b4aU//D/D2GvarHB7hRJrdGL16qrNAmpZVRh3J/cM3s1iMsMifqEaX1LddfzKTApR2oLMy4tYBerFGiiAKrNtg==}
@@ -3008,6 +3030,9 @@ packages:
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
 
+  rxjs@7.8.1:
+    resolution: {integrity: sha512-AA3TVj+0A2iuIoQkWEK/tqFjBq2j+6PO6Y0zJcvzLAFhEFIO3HL0vls9hWLncZbAAbK0mar7oZ4V079I/qPMxg==}
+
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
@@ -4137,12 +4162,44 @@ snapshots:
 
   '@jsdevtools/ono@7.1.3': {}
 
+  '@lukeed/csprng@1.1.0': {}
+
+  '@lukeed/uuid@2.0.1':
+    dependencies:
+      '@lukeed/csprng': 1.1.0
+
   '@mastra/auth@0.1.3':
     dependencies:
       jsonwebtoken: 9.0.2
       jwks-rsa: 3.2.0
     transitivePeerDependencies:
       - supports-color
+
+  '@mastra/client-js@0.13.1(encoding@0.1.13)(openapi-types@12.1.3)(react@19.1.1)(zod@3.25.76)':
+    dependencies:
+      '@ai-sdk/ui-utils': 1.2.11(zod@3.25.76)
+      '@lukeed/uuid': 2.0.1
+      '@mastra/core': 0.17.1(encoding@0.1.13)(openapi-types@12.1.3)(react@19.1.1)(zod@3.25.76)
+      json-schema: 0.4.0
+      rxjs: 7.8.1
+      zod: 3.25.76
+      zod-to-json-schema: 3.24.6(zod@3.25.76)
+    transitivePeerDependencies:
+      - '@hono/arktype-validator'
+      - '@hono/effect-validator'
+      - '@hono/typebox-validator'
+      - '@hono/valibot-validator'
+      - '@hono/zod-validator'
+      - '@sinclair/typebox'
+      - '@valibot/to-json-schema'
+      - arktype
+      - effect
+      - encoding
+      - openapi-types
+      - react
+      - supports-color
+      - valibot
+      - zod-openapi
 
   '@mastra/core@0.17.1(encoding@0.1.13)(openapi-types@12.1.3)(react@19.1.1)(zod@3.25.76)':
     dependencies:
@@ -6941,6 +6998,10 @@ snapshots:
   run-parallel@1.2.0:
     dependencies:
       queue-microtask: 1.2.3
+
+  rxjs@7.8.1:
+    dependencies:
+      tslib: 2.8.1
 
   safe-buffer@5.2.1: {}
 

@@ -30,7 +30,10 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.2.4",
+    "@mastra/client-js": "^0.13.1",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.5.2",
+    "jsonwebtoken": "^9.0.2",
     "lefthook": "^1.13.1",
     "mastra": "^0.13.1",
     "tsx": "^4.19.2",
