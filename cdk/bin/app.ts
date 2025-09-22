@@ -13,4 +13,6 @@ new MastraStack(app, "MastraS3VectorRagStack", {
   nodeEnv: process.env.NODE_ENV ?? "production",
   mastraJwtSecret: process.env.MASTRA_JWT_SECRET ?? "",
   s3VectorsBucketArn: process.env.S3_VECTORS_BUCKET_ARN,
+  s3VectorsBucketName: process.env.S3_VECTORS_BUCKET_NAME,
+  openaiApiKey: process.env.OPENAI_API_KEY ?? "",
 });

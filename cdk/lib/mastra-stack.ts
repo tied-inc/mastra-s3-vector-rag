@@ -13,6 +13,10 @@ export interface MastraStackProps extends StackProps {
   mastraJwtSecret?: string;
   /** ARN of the S3 Vectors bucket (arn:aws:s3vectors:region:account:bucket/<name>) */
   s3VectorsBucketArn?: string;
+  /** Name of the S3 Vectors bucket (name like your-s3vectors-bucket) */
+  s3VectorsBucketName?: string;
+  /** Value for process.env.OPENAI_API_KEY inside the Lambda */
+  openaiApiKey?: string;
 }
 
 export class MastraStack extends Stack {
@@ -24,6 +28,13 @@ export class MastraStack extends Stack {
     if (!vectorBucketArn) {
       throw new Error(
         "s3VectorsBucketArn is required (ARN like arn:aws:s3vectors:region:account:bucket/<name>)",
+      );
+    }
+
+    const vectorBucketName = props?.s3VectorsBucketName;
+    if (!vectorBucketName) {
+      throw new Error(
+        "s3VectorsBucketName is required (name like your-s3vectors-bucket)",
       );
     }
 
@@ -61,9 +72,11 @@ export class MastraStack extends Stack {
       environment: {
         // Provide S3 Vectors bucket ARN (runtime will derive name if needed)
         S3_VECTORS_BUCKET_ARN: vectorBucketArn,
+        S3_VECTORS_BUCKET_NAME: vectorBucketName,
         NODE_ENV: props?.nodeEnv ?? "production",
         // Provide JWT secret via stack props (set before `cdk deploy`)
         MASTRA_JWT_SECRET: props?.mastraJwtSecret ?? "",
+        OPENAI_API_KEY: props?.openaiApiKey ?? "",
       },
     });
 
