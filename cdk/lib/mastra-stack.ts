@@ -1,12 +1,5 @@
 import * as path from "node:path";
-import {
-  CfnOutput,
-  Duration,
-  RemovalPolicy,
-  Stack,
-  type StackProps,
-} from "aws-cdk-lib";
-import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import { CfnOutput, Duration, Stack, type StackProps } from "aws-cdk-lib";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import { FunctionUrlAuthType } from "aws-cdk-lib/aws-lambda";
 import * as iam from "aws-cdk-lib/aws-iam";
@@ -73,9 +66,6 @@ export class MastraStack extends Stack {
       },
     });
 
-    // Permissions
-    storageTable.grantReadWriteData(appFunction);
-
     // Attach S3 Vectors permissions directly to the Lambda role
     // Build resource ARNs for index-level and bucket-level operations
     const indexResources = [`${vectorBucketArn}/index/*`];
@@ -120,7 +110,6 @@ export class MastraStack extends Stack {
     });
 
     // Outputs
-    new CfnOutput(this, "StorageTableName", { value: storageTable.tableName });
     new CfnOutput(this, "FunctionUrl", { value: fnUrl.url });
   }
 }
