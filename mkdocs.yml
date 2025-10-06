@@ -1,0 +1,105 @@
+site_name: Mastra S3 Vector RAG
+site_description: A Mastra app using AWS S3 Vectors as vector store with MCP server
+site_author: Tied Inc.
+site_url: https://tied-inc.github.io/mastra-s3-vector-rag/
+
+repo_name: tied-inc/mastra-s3-vector-rag
+repo_url: https://github.com/tied-inc/mastra-s3-vector-rag
+
+theme:
+  name: material
+  language: en
+  palette:
+    # Palette toggle for light mode
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: true
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: en
+          default: true
+          name: English
+          build: true
+        - locale: ja
+          name: 日本語
+          build: true
+          nav_translations:
+            Home: ホーム
+            Setup: セットアップ
+            Requirements: 必要要件
+            Creating S3 Vectors Bucket: S3 Vectorsバケットの作成
+            Environment Variables: 環境変数
+            Development: 開発
+            Local Development: ローカル開発
+            MCP Server: MCPサーバー
+            Deployment: デプロイ
+            Deploy with CDK: CDKでデプロイ
+            Usage: 利用方法
+            Using with MCP Clients: MCPクライアントでの利用
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - def_list
+  - tables
+  - footnotes
+
+nav:
+  - Home: index.md
+  - Setup:
+      - Requirements: setup/requirements.md
+      - Creating S3 Vectors Bucket: setup/s3-vectors.md
+      - Environment Variables: setup/environment.md
+  - Development:
+      - Local Development: development/local.md
+      - MCP Server: development/mcp-server.md
+  - Deployment:
+      - Deploy with CDK: deployment/cdk.md
+  - Usage:
+      - Using with MCP Clients: usage/mcp-clients.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/tied-inc
+
