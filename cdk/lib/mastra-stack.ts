@@ -15,8 +15,6 @@ export interface MastraStackProps extends StackProps {
   s3VectorsBucketArn?: string;
   /** Name of the S3 Vectors bucket (name like your-s3vectors-bucket) */
   s3VectorsBucketName?: string;
-  /** Value for process.env.OPENAI_API_KEY inside the Lambda */
-  openaiApiKey?: string;
 }
 
 export class MastraStack extends Stack {
@@ -76,7 +74,6 @@ export class MastraStack extends Stack {
         NODE_ENV: props?.nodeEnv ?? "production",
         // Provide JWT secret via stack props (set before `cdk deploy`)
         MASTRA_JWT_SECRET: props?.mastraJwtSecret ?? "",
-        OPENAI_API_KEY: props?.openaiApiKey ?? "",
       },
     });
 
@@ -103,6 +100,17 @@ export class MastraStack extends Stack {
           "s3vectors:ListVectors",
         ],
         resources: [...indexResources, ...bucketResources],
+      }),
+    );
+
+    // Add Bedrock permissions for embedding model
+    appFunction.addToRolePolicy(
+      new iam.PolicyStatement({
+        effect: iam.Effect.ALLOW,
+        actions: ["bedrock:InvokeModel"],
+        resources: [
+          `arn:aws:bedrock:${this.region}::foundation-model/amazon.titan-embed-text-v2:0`,
+        ],
       }),
     );
 

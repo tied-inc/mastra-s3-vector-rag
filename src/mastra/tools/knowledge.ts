@@ -1,17 +1,18 @@
-import { openai } from "@ai-sdk/openai";
-import { RuntimeContext } from "@mastra/core/runtime-context";
+import { bedrock } from "@ai-sdk/amazon-bedrock";
 import { createTool } from "@mastra/core/tools";
-import { createVectorQueryTool, MDocument } from "@mastra/rag";
+import { MDocument } from "@mastra/rag";
 import { S3Vectors } from "@mastra/s3vectors";
 import { embed, embedMany } from "ai";
 import { z } from "zod";
 
 const DEFAULT_INDEX = process.env.S3_VECTORS_INDEX_NAME || "knowledge";
-const VECTOR_DIMENSION = 1536; // text-embedding-3-small
+const VECTOR_DIMENSION = 1024; // amazon.titan-embed-text-v2:0
+
+const embeddingModel = bedrock.embedding("amazon.titan-embed-text-v2:0");
 
 let s3Store: S3Vectors | null = null;
 
-function getStore(): S3Vectors {
+export function getStore(): S3Vectors {
   if (s3Store) return s3Store;
   const vectorBucketName = process.env.S3_VECTORS_BUCKET_NAME;
   const region = process.env.AWS_REGION || "ap-southeast-2";
@@ -76,7 +77,7 @@ export const knowledgeAddTool = createTool({
     const texts = chunks.map((c) => c.text);
 
     const { embeddings } = await embedMany({
-      model: openai.embedding("text-embedding-3-small"),
+      model: embeddingModel,
       values: texts,
     });
 
@@ -123,7 +124,7 @@ export const knowledgeUpdateTool = createTool({
     let vector: number[] | undefined;
     if (context.content) {
       const { embedding } = await embed({
-        model: openai.embedding("text-embedding-3-small"),
+        model: embeddingModel,
         value: context.content,
       });
       vector = embedding as number[];
@@ -212,21 +213,32 @@ export const knowledgeSearchTool = createTool({
       .replaceAll("_", "-")
       .toLowerCase();
     await ensureIndex(indexName);
-    const vectorQueryTool = createVectorQueryTool({
-      vectorStoreName: "s3vectors",
-      vectorStore: getStore(),
+    
+    const { embedding } = await embed({
+      model: embeddingModel,
+      value: context.queryText,
+    });
+    
+    const store = getStore();
+    const results = await store.query({
       indexName,
-      model: openai.embedding("text-embedding-3-small"),
+      queryVector: embedding as number[],
+      topK: context.topK,
+      filter: context.filter,
+      includeVector: context.includeVector,
     });
-    const runtimeContext = new RuntimeContext();
-    const { relevantContext, sources } = await vectorQueryTool.execute({
-      context: {
-        queryText: context.queryText,
-        topK: context.topK,
-        filter: context.filter,
-      },
-      runtimeContext,
-    });
+    
+    const relevantContext = results
+      .map((r) => r.metadata?.content || "")
+      .filter(Boolean)
+      .join("\n\n");
+    
+    const sources = results.map((r) => ({
+      id: r.id,
+      score: r.score,
+      metadata: r.metadata || {},
+    }));
+    
     return { relevantContext, sources };
   },
 });
